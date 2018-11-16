@@ -3,7 +3,8 @@ const app = express();
 const download = require('image-downloader');
 const mongoose = require('./db/config');
 const Image = require('./models/image');
-
+const sharp = require('sharp');
+const fs = require('fs');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => {
@@ -24,18 +25,32 @@ async function downloadIMG() {
             path: filename,
             url: options.url
         });
-        image.save();
+        image.save();        
+        transformImage(filename); 
     } catch (e) {
         console.error(e)
     }
 }
    
 downloadIMG();
+
 function getName(url) {
     let arr = url.split('/');
     let n = arr[arr.length - 1];
     let name = n.substr(0, n.length - 4);
     return name;
+}
+
+function transformImage(path) {
+    sharp(path)
+    .resize(100, 100)
+    .toBuffer()
+    .then( data => {
+        fs.writeFileSync(path, data);
+    })
+    .catch( err => {
+        console.log(err);
+    });											
 }
 
 app.listen(3000, () => {
