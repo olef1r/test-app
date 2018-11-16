@@ -39,6 +39,7 @@ app.post("/", function (req, res, next) {
             console.error(e)
         }
     }
+
     downloadIMG();
     next();
 });
@@ -46,8 +47,8 @@ app.post("/", function (req, res, next) {
 function getName(url) {
     let arr = url.split('/');
     let n = arr[arr.length - 1];
-    let name = n.substr(0, n.length - 4);
-    return name;
+    let name = n.split('.')
+    return name[0];
 }
 
 function transformImage(path) {
