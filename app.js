@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
-const download = require('image-downloader')
+const download = require('image-downloader');
+const mongoose = require('./db/config');
+const Image = require('./models/image');
+
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => {
@@ -14,15 +17,27 @@ const options = {
    
 async function downloadIMG() {
     try {
-        const { filename, image } = await download.image(options)
-        console.log(filename) 
+        const { filename } = await download.image(options);
+        console.log(filename);
+        const image = new Image({
+		 	name: getName(options.url),
+            path: filename,
+            url: options.url
+        });
+        image.save();
     } catch (e) {
         console.error(e)
     }
 }
    
 downloadIMG();
+function getName(url) {
+    let arr = url.split('/');
+    let n = arr[arr.length - 1];
+    let name = n.substr(0, n.length - 4);
+    return name;
+}
 
-app.listen(8080, () => {
-    console.log('App is starting on 8080 port')
+app.listen(3000, () => {
+    console.log('App is starting on 3000 port')
 })
