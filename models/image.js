@@ -16,7 +16,7 @@ let Image = mongoose.model('Image', {
     },
     url: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
         minlength: 1
     }
