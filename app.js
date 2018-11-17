@@ -14,8 +14,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get('/', function(req, res, next) {  
-    res.render('index', {file: '' });
+    res.render('index', {files: false});
 });
+
+let arr = [];
 
 app.post("/upload", async function (req, res, next) {     
     const options = {
@@ -25,7 +27,8 @@ app.post("/upload", async function (req, res, next) {
         type: getNameAndType(req.body.url)[1]       
     } 
     await downloadIMG(options);
-    res.render('index', {file: `images/${options.name}.${options.type}`})     
+    arr.push(`images/${options.name}.${options.type}`);   
+    res.render('index', {files: arr})    
     next();
 });
 
@@ -42,6 +45,11 @@ function getNameAndType(url) {
     let name = n.split('.')
     return [name[0], name[1]];
 }
+// function save(file) {
+//     let arr = [];
+//     arr.push(file.name)
+//     console.log(arr);
+// }
 
 function transformImage(path) {
     sharp(path)

@@ -16,23 +16,24 @@
                 <div class="file-field input-field">
                   <div class="btn grey">
                     <span>URL</span>
-                    <!-- <input name="myImage" type="text"> -->
                   </div>
                   <div id="test" class="file-path-wrapper">
                         <input type="text" name="url">
                   </div>
                 </div>
                 <button type="submit" class="btn">Submit</button>
-              </form>
-              <!-- <%= typeof test != 'undefined' ? test : '' %> -->
-              <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">
+        </form>
               <br>
-              <!-- <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">     -->
-                
-               
+              <% if(!files == false){ %>
+                <% files.forEach(function(file) { %>
+                  <div class="card card-body mb-3">
+                    <img src="<%= file %>" alt="">                   
+                  </div>
+                <% }) %>                
+                    <% } else { %>
+                      <p></p>
+                      <% } %>                       
     </div>
-    <img src='/home/anastasiia/work/nodeJS/test-app/public/images/807093396.jpg' class="responsive-img"> -->
-   
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
