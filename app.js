@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const download = require('image-downloader');
 const mongoose = require('./db/config');
-const Image = require('./models/image');
+const  {Image } = require('./models/image');
 const sharp = require('sharp');
 const fs = require('fs');
 const bodyParser = require("body-parser");
@@ -14,23 +14,37 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get('/', function(req, res, next) {  
+
+//    Image.find({}, (err, images) => {
+//         if(err) console.error(err);
+//         console.log(images)
+//     }).sort(( {name: '1'}));
+//     Image.find({}, (err, images) => {
+//         if(err) console.error(err);
+//         console.log(images)
+//     }).sort(( {name: '1'}));
+    
     res.render('index', {files: false});
 });
-
-let arr = [];
 
 app.post("/upload", async function (req, res, next) {     
     const options = {
         url: req.body.url,
         dest: __dirname + '/public/images',
         name: getNameAndType(req.body.url)[0],
-        type: getNameAndType(req.body.url)[1]       
+        type: getNameAndType(req.body.url)[1]
     } 
-    await downloadIMG(options);
-    arr.push(`images/${options.name}.${options.type}`);   
-    res.render('index', {files: arr})    
+    let img =  await downloadIMG(options);
+ 
+    array.push(img);   
+    res.render('index', {files: array})    
     next();
 });
+app.post('/sorting',function(req,res) {
+    console.log(req.body);
+    res.redirect('/')
+    });
+   
 
 function checkType(type, callback) {
     const filetypes = /jpeg|jpg|png|gif/;
@@ -45,15 +59,11 @@ function getNameAndType(url) {
     let name = n.split('.')
     return [name[0], name[1]];
 }
-// function save(file) {
-//     let arr = [];
-//     arr.push(file.name)
-//     console.log(arr);
-// }
 
 function transformImage(path) {
+
     sharp(path)
-    .resize(100, 100)
+    .resize(150, 150)
     .toBuffer()
     .then( data => {
         fs.writeFileSync(path, data);
@@ -65,23 +75,30 @@ function transformImage(path) {
 
 async function downloadIMG(options) {
     try {
-        if (checkType(options.type)) {               
-          const { filename } = await download.image(options);             
-            
-          const image = new Image({
-              name: options.name,
-              path: filename,
-              url: options.url
-          });
-          console.log(image)
-          image.save();        
-          transformImage(filename); 
+        if (checkType(options.type)) {  
+        const { filename } = await download.image(options);        
+        let stats = fs.statSync(filename);
+        let size = stats["size"]
+        let birthtime = stats["birthtime"]
+          
+        const image = new Image({
+            name: options.name,
+            path: filename,
+            url: options.url,
+            size: size,
+            birthtime: birthtime,
+            type: options.type,
+            pathForHtml: options.name + '.' + options.type
+        });
+        image.save();        
+        transformImage(filename); 
+        return image;  
         } else console.log('images only');      
     } catch (e) {
         console.error(e)
     }
 }
 
-app.listen(3000, () => {
+app.listen(8080, () => {
     console.log('App is starting on 3000 port')
 })
