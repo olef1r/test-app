@@ -7,16 +7,12 @@
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-      
-
-    <title>Document</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">    
+    <title>Images download</title>
 </head>
 <body>
-    <div class="container">
-        <h1>File Upload</h1>
-        <%= typeof msg != 'undefined' ? msg : '' %>
-        
+        <h1>Download images</h1>
+        <%= typeof msg != 'undefined' ? msg : '' %>        
         <form action="/upload" method="POST">
                 <div class="file-field input-field">
                   <div class="btn grey">
@@ -29,41 +25,39 @@
                 <button type="submit" class="btn">Submit</button>
         </form>
               <br>
-
-              <form method="POST" action="/sorting" >  
-                        <div id="input-field">
-                            <select name="sort" class="browser-default">
-                              <optgroup label="Name">
-                                <option value="0" selected disabled hidden>Sorting by</option>
-                                <option value="1">ascending</option>
-                                <option value="2">descending</option>
-                              </optgroup>
-                              <optgroup label="Size">
-                                <option value="3">ascending</option>
-                                <option value="4">descending</option>
-                              </optgroup>
-                              <optgroup label="Date">
-                                  <option value="5">ascending</option>
-                                  <option value="6">descending</option>
-                                </optgroup>
-                            </select>
-                          </div>
-                          <br>
-                           <button type="submit" class="btn" onclick="form.action='sorting'">Choose</button>
-                    </form>
-                    
+        <form method="POST" action="/sorting" >  
+                  <div id="input-field">
+                      <select name="sort" class="browser-default">
+                        <optgroup label="Name">
+                          <option value="0" selected disabled hidden>Sorting by</option>
+                          <option value="1">ascending</option>
+                          <option value="2">descending</option>
+                        </optgroup>
+                        <optgroup label="Size">
+                          <option value="3">ascending</option>
+                          <option value="4">descending</option>
+                        </optgroup>
+                        <optgroup label="Date">
+                            <option value="5">ascending</option>
+                            <option value="6">descending</option>
+                          </optgroup>
+                      </select>
+                    </div>
+                    <br>
+                      <button type="submit" class="btn" onclick="form.action='sorting'">Choose</button>
+              </form>                    
               <% if(!files == false){ %>
                 <% files.forEach(function(file) { %>
                   <div class="card card-body mb-3">
                     <img src="images/<%= file.pathForHtml%>" alt=""> 
-                    <p>Size: <%= file.size%></p>             
-                    <p>Date: <%= file.birthtime%></p>                 
+                    <p><b>Name:</b> <%= file.name%></p>
+                    <p><b>Size:</b> <%= file.size%></p>             
+                    <p><b>Date:</b> <%= file.birthtime%></p>                 
                   </div>
                 <% }) %>                
                     <% } else { %>
                       <p></p>
                       <% } %>                       
-    </div>
 <!--JavaScript at end of body for optimized loading-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

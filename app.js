@@ -6,6 +6,7 @@ const  { Image } = require('./models/image');
 const sharp = require('sharp');
 const fs = require('fs');
 const bodyParser = require("body-parser");
+const dateFormat = require('dateformat');
 
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
@@ -30,7 +31,7 @@ app.post("/upload",  function (req, res, next) {
     // checking if exist in DB
     Image.findOne({name: options.name}, async (err, img) => {
         if (img) {
-            res.render('index', {msg: 'Image exist!', files: false})
+            res.render('index', {msg: 'Image is downloaded!', files: array})
         } else {
             let img =  await downloadIMG(options); 
             array.push(img);   
@@ -137,5 +138,5 @@ async function downloadIMG(options) {
 }
 
 app.listen(8080, () => {
-    console.log('App is starting on 3000 port')
+    console.log('App is starting on port 8080')
 })
