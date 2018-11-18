@@ -34,9 +34,14 @@ app.post("/upload",  function (req, res, next) {
             res.render('index', {msg: 'Image is downloaded!', files: array})
         } else {
             let img =  await downloadIMG(options); 
-            array.push(img);   
-            res.render('index', {files: array, msg: ' '})    
-            next();
+            if (img) {
+                array.push(img);   
+                res.render('index', {files: array, msg: ' '})    
+                next();
+            } else {
+                res.render('index', {files: false, msg: 'URL is incorrect!'})  
+            }
+            
         }        
     })
 });
@@ -87,9 +92,7 @@ app.post('/sorting',function(req,res) {
    
 function checkType(type, callback) {
     const filetypes = /jpeg|jpg|png|gif/;
-    if(filetypes.test(type)) {
-        return true; 
-    } else return false;
+    if(filetypes.test(type)) return true;
 }
  
 function getNameAndType(url) {
@@ -131,7 +134,7 @@ async function downloadIMG(options) {
         image.save();        
         transformImage(filename); 
         return image;  
-        } else console.log('images only');      
+        } //else console.log('images only');      
     } catch (e) {
         console.error(e)
     }
